@@ -1,0 +1,7 @@
+{
+  "name": "blep.com (Astro)",
+  "kind": "web",
+  "runtime": "astro 5 (node)",
+  "run_cmd": "npm install && npx astro build && npx astro preview",
+  "description": "Static rebuild of www.blep.com, migrated from concrete5."
+}

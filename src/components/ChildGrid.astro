@@ -1,0 +1,23 @@
+---
+import { Image } from 'astro:assets';
+import { url, childrenOf, type Page } from '../lib';
+interface Props { pages: Page[]; slug: string }
+const { pages, slug } = Astro.props;
+const kids = childrenOf(pages, slug);
+---
+{kids.length > 0 && (
+  <ul class="child-grid">
+    {kids.map((k) => {
+      const isSeries = childrenOf(pages, k.data.slug).length > 0;
+      return (
+        <li class={isSeries ? 'series' : ''}>
+          <a href={url(k.data.slug)}>
+            {k.data.thumb
+              ? <Image src={k.data.thumb} alt="" widths={isSeries ? [920, 1840] : [280, 560]} sizes={isSeries ? '920px' : '280px'} />
+              : <span class="no-thumb" />}
+            <span class="label">{k.data.title}</span>
+          </a>
+        </li>);
+    })}
+  </ul>
+)}

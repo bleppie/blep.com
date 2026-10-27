@@ -1,0 +1,35 @@
+---
+import '../styles/site.css';
+interface Props { title: string; section?: string; description?: string }
+const { title, section, description = 'Brian Knep is a new media artist whose works range from large-scale interactive installations to microscopic sculptures for nematodes.' } = Astro.props;
+const nav = [
+  { href: '/works/', label: 'Artwork', key: 'works' },
+  { href: '/rd/', label: 'Design/Research', key: 'rd' },
+  { href: '/about/', label: 'About', key: 'about' },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title === 'Home' ? 'Brian Knep' : `Brian Knep :: ${title}`}</title>
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=Asap:ital@1&display=swap" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <a class="logo" href="/">Brian Knep</a>
+        <nav class="site-nav">
+          {nav.map((n) => <a href={n.href} aria-current={section === n.key ? 'page' : undefined}>{n.label}</a>)}
+        </nav>
+      </header>
+      <slot />
+      <footer class="site-footer">© {new Date().getFullYear()} Brian Knep. All rights reserved.</footer>
+    </div>
+    <script src="../scripts/lightbox.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Not found">
+  <hr class="divider" />
+  <p style="margin:40px 0">Sorry, that page isn't here. <a href="/works/">See all artwork</a>.</p>
+</Base>
+<script is:inline>
+  // Old links like /index.php/works/... → /works/...
+  if (location.pathname.startsWith('/index.php/')) location.replace(location.pathname.slice(10) + location.search);
+</script>

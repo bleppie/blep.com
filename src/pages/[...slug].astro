@@ -1,0 +1,51 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Blocks from '../components/Blocks.astro';
+import ChildGrid from '../components/ChildGrid.astro';
+import { allPages, childrenOf, parentOf, url, type Page } from '../lib';
+
+export async function getStaticPaths() {
+  const pages = await allPages();
+  return pages.filter((p) => p.data.slug !== 'home').map((page) => ({ params: { slug: page.data.slug }, props: { page, pages } }));
+}
+
+const { page, pages } = Astro.props as { page: Page; pages: Page[] };
+const { slug, title, media, year, content } = page.data;
+const { Content } = await render(page);
+const parentSlug = parentOf(slug);
+const parent = pages.find((p) => p.data.slug === parentSlug);
+const siblings = parentSlug ? childrenOf(pages, parentSlug) : [];
+const i = siblings.indexOf(page);
+const prev = siblings[i - 1], next = siblings[i + 1];
+const hasSide = page.body?.trim().length > 0;
+// "For more information see <series>" — only for works inside a series.
+const series = parent && parentOf(parentSlug) ? parent : undefined;
+---
+<Base title={title} section={slug.split('/')[0]}>
+  {parent && (
+    <nav class="pager">
+      <span>{prev && <a href={url(prev.data.slug)}>« Prev</a>}</span>
+      <a href={url(parentSlug)}>Up</a>
+      <span class="next">{next && <a href={url(next.data.slug)}>Next »</a>}</span>
+    </nav>
+  )}
+  <div class="project-info">
+    <h1>{title}</h1>
+    {media && <div class="media">{media}</div>}
+    {year && <div class="year">{year}</div>}
+  </div>
+  <hr class="divider" />
+  <ChildGrid pages={pages} slug={slug} />
+  {(content.length > 0 || hasSide) && (
+    <main class:list={['work', { 'no-side': !hasSide }]}>
+      <section class="work-main"><Blocks blocks={content} title={title} wide={!hasSide} /></section>
+      {hasSide && (
+        <aside class="work-side prose">
+          <Content />
+          {series && <p class="series-link">For more information see <a href={url(series.data.slug)}>{series.data.title}</a></p>}
+        </aside>
+      )}
+    </main>
+  )}
+</Base>

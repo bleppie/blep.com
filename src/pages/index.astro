@@ -1,0 +1,40 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { allPages } from '../lib';
+const home = (await allPages()).find((p) => p.data.slug === 'home')!;
+const { slides = [], sections = [] } = home.data;
+---
+<Base title="Home">
+  <hr class="divider" />
+  <div class="slideshow" aria-roledescription="carousel">
+    <div class="slides">
+      {slides.map((s, i) => (
+        <a class="slide" href={s.link}>
+          <Image src={s.image} alt={s.title} widths={[480, 960, 1920]} sizes="(max-width: 960px) 100vw, 920px" loading={i === 0 ? 'eager' : 'lazy'} />
+          <span class="caption">{s.title}</span>
+        </a>
+      ))}
+    </div>
+    <div class="dots">{slides.map((s, i) => <button aria-label={`Show ${s.title}`} data-i={i}></button>)}</div>
+  </div>
+  <hr class="divider" />
+  <ul class="sections">
+    {sections.map((s) => <li><h2><a href={s.link}>{s.title}</a></h2><p>{s.blurb}</p></li>)}
+  </ul>
+</Base>
+<script>
+  // Advance the slideshow every 5 s; dots and swiping still work (CSS scroll-snap).
+  const track = document.querySelector<HTMLElement>('.slideshow .slides')!;
+  const dots = [...document.querySelectorAll<HTMLButtonElement>('.slideshow .dots button')];
+  const go = (i: number) => track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' });
+  const idx = () => Math.round(track.scrollLeft / track.clientWidth);
+  dots.forEach((d, i) => d.addEventListener('click', () => go(i)));
+  track.addEventListener('scroll', () => dots.forEach((d, i) => d.toggleAttribute('aria-current', i === idx())), { passive: true });
+  dots[0]?.setAttribute('aria-current', '');
+  let paused = false;
+  track.addEventListener('pointerenter', () => (paused = true));
+  track.addEventListener('pointerleave', () => (paused = false));
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
+    setInterval(() => { if (!paused && !document.hidden) go((idx() + 1) % dots.length); }, 5000);
+</script>
