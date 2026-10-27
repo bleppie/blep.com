@@ -1,7 +1,7 @@
 ---
 import { marked } from 'marked';
 import Picture from './Picture.astro';
-import type { Page } from '../lib';
+import { withBase, htmlWithBase, type Page } from '../lib';
 interface Props { blocks: Page['data']['content']; title: string; wide: boolean }
 const { blocks, title, wide } = Astro.props;
 const full = wide ? '(max-width: 960px) 100vw, 920px' : '(max-width: 720px) 100vw, 600px';
@@ -15,16 +15,16 @@ const half = wide ? '(max-width: 720px) 100vw, 450px' : '(max-width: 720px) 100v
         {b.caption && <figcaption>{b.caption}</figcaption>}
       </figure>);
     if ('gif' in b) return (
-      <figure class={b.half ? 'half' : ''}><img src={b.gif} alt={b.caption || title} data-full={b.gif} data-caption={b.caption} loading="lazy" />{b.caption && <figcaption>{b.caption}</figcaption>}</figure>);
+      <figure class={b.half ? 'half' : ''}><img src={withBase(b.gif)} alt={b.caption || title} data-full={withBase(b.gif)} data-caption={b.caption} loading="lazy" />{b.caption && <figcaption>{b.caption}</figcaption>}</figure>);
     if ('gallery' in b) return (
       <div class="gallery">
         {b.gallery.map((g) => 'image' in g
           ? <Picture src={g.image} alt={g.caption || title} caption={g.caption} sizes={half} />
-          : <img src={g.gif} alt={g.caption || title} data-full={g.gif} data-caption={g.caption} loading="lazy" />)}
+          : <img src={withBase(g.gif)} alt={g.caption || title} data-full={withBase(g.gif)} data-caption={g.caption} loading="lazy" />)}
       </div>);
     if ('youtube' in b) return <div class="video"><iframe src={`https://www.youtube-nocookie.com/embed/${b.youtube}`} title={title} loading="lazy" allowfullscreen></iframe></div>;
     if ('vimeo' in b) return <div class="video"><iframe src={`https://player.vimeo.com/video/${b.vimeo}?dnt=1`} title={title} loading="lazy" allowfullscreen></iframe></div>;
-    if ('text' in b) return <div class="prose" set:html={marked.parse(b.text)} />;
+    if ('text' in b) return <div class="prose" set:html={htmlWithBase(marked.parse(b.text) as string)} />;
     if ('divider' in b) return <hr class="divider" />;
   })}
 </div>

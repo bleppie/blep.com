@@ -1,5 +1,4 @@
 # Builds the site and publishes it to GitHub Pages on every push to main.
-# One-time setup: repo Settings → Pages → Source: "GitHub Actions".
 name: Deploy to GitHub Pages
 on:
   push: { branches: [main] }
@@ -11,7 +10,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: withastro/action@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      # Tells us whether the site is served from a sub-folder
+      # (bleppie.github.io/blep.com/) or from a custom domain (www.blep.com).
+      - id: pages
+        uses: actions/configure-pages@v5
+      # Keep generated image sizes between runs so builds stay fast.
+      - uses: actions/cache@v4
+        with:
+          path: node_modules/.astro
+          key: astro-images-${{ hashFiles('src/content/**') }}
+          restore-keys: astro-images-
+      - run: npm ci
+      - run: npx astro build
+        env: { BASE_PATH: '${{ steps.pages.outputs.base_path }}' }
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: dist }
   deploy:
     needs: build
     runs-on: ubuntu-latest

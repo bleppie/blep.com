@@ -71,9 +71,24 @@ npm run dev        # live preview at http://localhost:4321
 npm run build      # the finished site goes to dist/
 ```
 
-## Publishing at www.blep.com
+## Publishing
 
-1. Repo **Settings → Pages → Source: GitHub Actions** (one time).
-2. In the same page, set **Custom domain** to `www.blep.com`.
-3. At your DNS provider, point `www` (CNAME) to `<your-github-username>.github.io`,
-   and the bare `blep.com` to GitHub's Pages IPs (A records 185.199.108–111.153).
+Every push to `main` builds and publishes the site (Actions tab shows progress).
+Until www.blep.com points here it's served at https://bleppie.github.io/blep.com/ —
+the build detects this and adjusts all links automatically.
+
+To switch www.blep.com over, see "Pointing www.blep.com at GitHub Pages" below.
+
+## Pointing www.blep.com at GitHub Pages
+
+1. At your DNS provider, set these records:
+   - `www` — **CNAME** → `bleppie.github.io`
+   - `@` (bare blep.com) — **A** records → `185.199.108.153`, `185.199.109.153`,
+     `185.199.110.153`, `185.199.111.153`
+   - optional IPv6 `@` **AAAA** → `2606:50c0:8000::153`, `2606:50c0:8001::153`,
+     `2606:50c0:8002::153`, `2606:50c0:8003::153`
+2. Repo **Settings → Pages → Custom domain**: enter `www.blep.com`, Save.
+   GitHub checks DNS, then issues an HTTPS certificate (minutes to an hour).
+3. Tick **Enforce HTTPS** once it's offered.
+4. Re-run the latest deploy (Actions → Deploy to GitHub Pages → Re-run) so the
+   links drop the `/blep.com` prefix.

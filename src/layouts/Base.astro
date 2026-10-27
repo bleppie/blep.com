@@ -1,5 +1,6 @@
 ---
 import '../styles/site.css';
+import { withBase } from '../lib';
 interface Props { title: string; section?: string; description?: string }
 const { title, section, description = 'Brian Knep is a new media artist whose works range from large-scale interactive installations to microscopic sculptures for nematodes.' } = Astro.props;
 const nav = [
@@ -22,9 +23,9 @@ const nav = [
   <body>
     <div class="page">
       <header class="site-header">
-        <a class="logo" href="/">Brian Knep</a>
+        <a class="logo" href={withBase('/')}>Brian Knep</a>
         <nav class="site-nav">
-          {nav.map((n) => <a href={n.href} aria-current={section === n.key ? 'page' : undefined}>{n.label}</a>)}
+          {nav.map((n) => <a href={withBase(n.href)} aria-current={section === n.key ? 'page' : undefined}>{n.label}</a>)}
         </nav>
       </header>
       <slot />

@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import { allPages } from '../lib';
+import { allPages, withBase } from '../lib';
 const home = (await allPages()).find((p) => p.data.slug === 'home')!;
 const { slides = [], sections = [] } = home.data;
 ---
@@ -10,7 +10,7 @@ const { slides = [], sections = [] } = home.data;
   <div class="slideshow" aria-roledescription="carousel">
     <div class="slides">
       {slides.map((s, i) => (
-        <a class="slide" href={s.link}>
+        <a class="slide" href={withBase(s.link)}>
           <Image src={s.image} alt={s.title} widths={[480, 960, 1920]} sizes="(max-width: 960px) 100vw, 920px" loading={i === 0 ? 'eager' : 'lazy'} />
           <span class="caption">{s.title}</span>
         </a>
@@ -20,7 +20,7 @@ const { slides = [], sections = [] } = home.data;
   </div>
   <hr class="divider" />
   <ul class="sections">
-    {sections.map((s) => <li><h2><a href={s.link}>{s.title}</a></h2><p>{s.blurb}</p></li>)}
+    {sections.map((s) => <li><h2><a href={withBase(s.link)}>{s.title}</a></h2><p>{s.blurb}</p></li>)}
   </ul>
 </Base>
 <script>
