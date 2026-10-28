@@ -11,7 +11,7 @@ img { max-width:100%; height:auto; display:block; }
 
 .page { max-width:960px; margin:0 auto; padding:48px 20px 24px; }
 .site-header { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 40px; }
-.logo { font-size:32px; letter-spacing:1px; color:var(--muted); }
+.logo { font-family:'Asap', system-ui, sans-serif; font-weight:400; text-transform:uppercase; font-size:32px;color:var(--muted); }
 .logo:hover { color:#555; }
 .site-nav { display:flex; flex-wrap:wrap; gap:6px 24px; font-size:14px; }
 .site-nav a { color:var(--muted); }
