@@ -1,0 +1,20 @@
+// GitHub Codespaces setup: installs everything and opens a live preview of the
+// site next to the editor. Edits show up in the preview as soon as you save;
+// nothing is published until you commit and push.
+{
+  "name": "blep.com",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "postCreateCommand": "npm ci",
+  "postAttachCommand": "npm run dev -- --host",
+  "forwardPorts": [4321],
+  "portsAttributes": {
+    "4321": { "label": "Site preview", "onAutoForward": "openPreview" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["astro-build.astro-vscode"],
+      "settings": { "files.autoSave": "afterDelay" }
+    },
+    "codespaces": { "openFiles": ["README.md"] }
+  }
+}

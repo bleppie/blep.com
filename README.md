@@ -63,6 +63,17 @@ with a message telling you which file — nothing broken gets published.
 
 A folder that has sub-folders is a series: its page shows a grid of its works.
 
+## Previewing changes without publishing (Codespaces)
+
+1. On the repo page: **Code → Codespaces → Create codespace on main**
+   (later: **Code → Codespaces →** pick the existing one to reopen it).
+2. Wait a minute while it installs. A **Site preview** pane opens beside the editor.
+   (If it doesn't: open the **Ports** tab at the bottom and click the globe next to 4321.)
+3. Edit files on the left; the preview updates when you save (auto-save is on).
+4. To publish: **Source Control** panel (left sidebar) → type a short message →
+   **Commit**, then **Sync/Push**. The live site updates a few minutes later.
+5. Close the browser tab when you're done; the codespace stops itself when idle.
+
 ## Working locally
 
 ```sh
